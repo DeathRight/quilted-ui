@@ -53,6 +53,6 @@ const replaceTokens = <V extends Obj<any> | Token>(
 
 export const test = replaceTokens(
   { tokenPrefix: "$" },
-  { color: "red", size: "10px" },
+  { color: "red", size: 10 },
   { color: "$color $size" }
 );
