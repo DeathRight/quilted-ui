@@ -6,6 +6,8 @@ export type Obj<T = string> = { [key: string]: T };
 
 export type PropsWithChildren<P> = P & { children?: React.ReactNode };
 
+export type numberish = number | string;
+
 /* -------------------------------------------------------------------------- */
 /*                                   Prefix                                   */
 /* -------------------------------------------------------------------------- */
