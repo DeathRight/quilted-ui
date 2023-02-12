@@ -1,4 +1,4 @@
-import { QuiltedUiConfig } from "./config";
+import { QUIConfig } from "./config";
 import { Obj, PrefixedObjectKeys } from "./typing";
 
 type Token = string | number;
@@ -28,7 +28,7 @@ const getPrefixedTokens = <T extends Obj, Prefix extends string>(
  * Recursively replace all references to tokens with the associated token value.
  */
 const replaceTokens = <V extends Obj<any> | Token>(
-  config: QuiltedUiConfig,
+  config: QUIConfig,
   tokens: TokenMap,
   value: V
 ): V => {

@@ -1,6 +1,6 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { ImageStyle, TextStyle, ViewStyle } from "react-native";
 import { formatNumberish } from "./common";
-import { numberish } from "./typing";
+import { GetCommon, numberish } from "./typing";
 
 /* -------------------------------------------------------------------------- */
 /*                                  Constants                                 */
@@ -15,19 +15,28 @@ const StyleIncludes = ["shadowOffsetWidth", "shadowOffsetHeight"] as const;
 /*                                    Types                                   */
 /* -------------------------------------------------------------------------- */
 
-type Style = ViewStyle | TextStyle | ImageStyle;
-type StylePropertyKey<S extends Style> = keyof S;
-type StylePropertyValue<S extends Style> = S[StylePropertyKey<S>];
+/**
+ * A Style type with only the properties that are commmon in all react native style types
+ */
+export type CommonStyle = GetCommon<[ViewStyle, TextStyle, ImageStyle]>;
+
+export type NativeStyles = {
+  common: CommonStyle;
+  view: ViewStyle;
+  text: TextStyle;
+  image: ImageStyle;
+};
+
+type Style = NativeStyles[keyof NativeStyles];
 
 type StyleIncludesT = {
-  shadowOffsetWidth?: numberish;
-  shadowOffsetHeight?: numberish;
+  [K in typeof StyleIncludes[number]]?: numberish;
 };
 
 type StyleProperties<S extends Style> = {
-  [K in StylePropertyKey<S>]?: StylePropertyValue<S> | string;
+  [K in keyof S]?: S[K];
 };
-export type QUINativeStyleProperties<S extends Style> = Omit<
+export type QUINativeStyleProperties<S extends Style = any> = Omit<
   StyleProperties<S>,
   typeof StyleExcludes[number]
 > &
@@ -53,6 +62,7 @@ export const formatStyleTo = <S extends Style>(
   // and convert it to the correct format from StyleIncludes if necessary
   StyleExcludes.forEach((k) => {
     if (formattedStyle[k]) {
+      // if we find a shadowOffset, convert it to shadowOffsetWidth and shadowOffsetHeight
       if (k === "shadowOffset") {
         const { width, height } = formattedStyle[k] as {
           width: numberish | undefined;
