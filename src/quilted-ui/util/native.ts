@@ -34,9 +34,9 @@ type StyleIncludesT = {
 };
 
 type StyleProperties<S extends Style> = {
-  [K in keyof S]?: S[K];
+  [K in keyof S]?: K extends keyof S ? S[K] : never;
 };
-export type QUINativeStyleProperties<S extends Style = any> = Omit<
+export type QUINativeStyleProperties<S extends Style = CommonStyle> = Omit<
   StyleProperties<S>,
   typeof StyleExcludes[number]
 > &

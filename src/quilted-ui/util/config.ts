@@ -1,6 +1,5 @@
-import { FlexStyle } from "react-native";
 import { NativeStyles, QUINativeStyleProperties } from "./native";
-import { numberish, valueof } from "./typing";
+import { numberish } from "./typing";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Custom Util                                */
@@ -8,22 +7,22 @@ import { numberish, valueof } from "./typing";
 
 type NSKeys = keyof NativeStyles;
 type StyleProps<S extends NSKeys> = QUINativeStyleProperties<NativeStyles[S]>;
-type QUIUtilProperty<S extends NSKeys> = <T>(value: numberish) => {
-  [K in keyof StyleProps<S>]: K extends keyof StyleProps<S>
-    ? StyleProps<S>[K]
-    : never;
-};
+type QUIUtilProperty<S extends NSKeys> = (value: numberish) => StyleProps<S>;
 
-type QUIUtilStyleProperties<S extends NSKeys> = {
-  [K: string]: QUIUtilProperty<S>;
-};
-
+type QUIUtilStyleProperties<S extends NSKeys> = Record<
+  string,
+  QUIUtilProperty<S>
+>;
 type QUIUtils = {
   common?: QUIUtilStyleProperties<"common">;
   view?: QUIUtilStyleProperties<"view">;
   text?: QUIUtilStyleProperties<"text">;
   image?: QUIUtilStyleProperties<"image">;
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                   Config                                   */
+/* -------------------------------------------------------------------------- */
 
 export interface QUIConfig {
   tokenPrefix?: string;
@@ -33,8 +32,10 @@ export interface QUIConfig {
 export const defaultConfig: QUIConfig = {
   tokenPrefix: "$",
   utils: {
-    view: {
-      m: (value) => ({ margin: value }),
+    common: {
+      m: (value) => ({
+        margin: value,
+      }),
       mt: (value) => ({
         marginTop: value,
       }),
